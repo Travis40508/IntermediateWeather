@@ -5,14 +5,19 @@ import android.os.Bundle;
 
 import com.elkcreek.rodneytressler.intermediateandroid.R;
 
+import javax.inject.Inject;
+
 import dagger.android.AndroidInjection;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MainView {
+
+    @Inject protected MainPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        presenter.onCreate(this);
     }
 }
