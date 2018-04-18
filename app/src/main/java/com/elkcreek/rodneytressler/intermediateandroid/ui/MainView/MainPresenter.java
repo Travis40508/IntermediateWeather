@@ -23,9 +23,7 @@ public class MainPresenter {
         this.view = view;
 
         if(view != null) {
-            googleService.getCurrentLocation("Paintsville, Kentucky").subscribe(response -> {
-                Log.d("@@@@", String.valueOf(response.getLatitude()));
-            }, throwable -> throwable.printStackTrace());
+
         }
     }
 }

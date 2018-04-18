@@ -46,9 +46,9 @@ public interface GoogleApi {
 
     class GoogleGeometry {
         @SerializedName("location")
-        @Expose private Observable<GoogleLocation> googleLocation;
+        @Expose private GoogleLocation googleLocation;
 
-        public Observable<GoogleLocation> getGoogleLocation() {
+        public GoogleLocation getGoogleLocation() {
             return googleLocation;
         }
     }

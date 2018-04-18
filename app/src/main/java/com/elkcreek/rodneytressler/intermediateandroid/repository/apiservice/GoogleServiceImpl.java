@@ -30,6 +30,6 @@ public class GoogleServiceImpl implements GoogleService {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .filter(googleAddress -> !googleAddress.getAddressInformation().isEmpty())
-                .flatMap(googleAddress -> googleAddress.getAddressInformation().get(0).getGoogleGeometry().getGoogleLocation());
+                .map(googleAddress -> googleAddress.getAddressInformation().get(0).getGoogleGeometry().getGoogleLocation());
     }
 }
