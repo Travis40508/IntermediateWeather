@@ -17,7 +17,7 @@ import retrofit2.http.Query;
 
 public interface GoogleApi {
     @GET("json?api_key=" + BuildConfig.API_KEY_GOOGLEGEO)
-    Call<ResponseGoogleAddress> getAddress(@Query("address") String address);
+    Observable<ResponseGoogleAddress> getAddress(@Query("address") String address);
 
     class ResponseGoogleAddress {
         @SerializedName("results")
@@ -46,9 +46,9 @@ public interface GoogleApi {
 
     class GoogleGeometry {
         @SerializedName("location")
-        @Expose private GoogleLocation googleLocation;
+        @Expose private Observable<GoogleLocation> googleLocation;
 
-        public GoogleLocation getGoogleLocation() {
+        public Observable<GoogleLocation> getGoogleLocation() {
             return googleLocation;
         }
     }

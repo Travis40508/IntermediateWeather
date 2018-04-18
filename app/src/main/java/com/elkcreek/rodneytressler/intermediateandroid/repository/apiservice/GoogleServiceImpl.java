@@ -26,17 +26,10 @@ public class GoogleServiceImpl implements GoogleService {
     @Override
     public Observable<GoogleApi.GoogleLocation> getCurrentLocation(String address) {
 
-//        return googleApi.getAddress(address)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .flatMap(GoogleApi.ResponseGoogleAddress::getGoogleGeometry)
-//                .flatMap(GoogleApi.GoogleGeometry::getGoogleLocation);
-//        googleApi.getAddress(address)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(stuff -> Log.d("@@@@", stuff.getAddressInformation().get(0).getFormattedAddress()));
-
-
-        return null;
+        return googleApi.getAddress(address)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .filter(googleAddress -> !googleAddress.getAddressInformation().isEmpty())
+                .flatMap(googleAddress -> googleAddress.getAddressInformation().get(0).getGoogleGeometry().getGoogleLocation());
     }
 }
