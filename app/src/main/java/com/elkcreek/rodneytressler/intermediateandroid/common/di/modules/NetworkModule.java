@@ -1,9 +1,13 @@
 package com.elkcreek.rodneytressler.intermediateandroid.common.di.modules;
 
+import com.elkcreek.rodneytressler.intermediateandroid.repository.apis.DarkSkyApi;
 import com.elkcreek.rodneytressler.intermediateandroid.repository.apis.GoogleApi;
+import com.elkcreek.rodneytressler.intermediateandroid.repository.apiservice.DarkSkyService;
+import com.elkcreek.rodneytressler.intermediateandroid.repository.apiservice.DarkSkyServiceImpl;
 import com.elkcreek.rodneytressler.intermediateandroid.repository.apiservice.GoogleService;
 import com.elkcreek.rodneytressler.intermediateandroid.repository.apiservice.GoogleServiceImpl;
 import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -63,8 +67,22 @@ public class NetworkModule {
 
     @Provides
     @Singleton
-    GoogleService providesGoogleService(GoogleApi googleApi) {
-        return new GoogleServiceImpl(googleApi);
+    DarkSkyApi providesDarkSkyApi(@Named("darksky retrofit") Retrofit retrofit) {
+        DarkSkyApi darkSkyApi = retrofit.create(DarkSkyApi.class);
+
+        return darkSkyApi;
+    }
+
+    @Provides
+    @Singleton
+    DarkSkyService providesDarkSkyService(DarkSkyApi darkSkyApi) {
+        return new DarkSkyServiceImpl(darkSkyApi);
+    }
+
+    @Provides
+    @Singleton
+    GoogleService providesGoogleService(GoogleApi googleApi, DarkSkyService darkSkyService) {
+        return new GoogleServiceImpl(googleApi, darkSkyService);
     }
 
 

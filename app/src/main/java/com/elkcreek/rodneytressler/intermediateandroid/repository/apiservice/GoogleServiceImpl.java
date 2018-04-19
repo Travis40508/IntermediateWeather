@@ -2,6 +2,7 @@ package com.elkcreek.rodneytressler.intermediateandroid.repository.apiservice;
 
 import android.util.Log;
 
+import com.elkcreek.rodneytressler.intermediateandroid.repository.apis.DarkSkyApi;
 import com.elkcreek.rodneytressler.intermediateandroid.repository.apis.GoogleApi;
 
 import io.reactivex.Observable;
@@ -17,19 +18,31 @@ import retrofit2.Response;
 
 public class GoogleServiceImpl implements GoogleService {
 
+    private final DarkSkyService darkSkyService;
     private GoogleApi googleApi;
 
-    public GoogleServiceImpl(GoogleApi googleApi) {
+    public GoogleServiceImpl(GoogleApi googleApi, DarkSkyService darkSkyService) {
         this.googleApi = googleApi;
+        this.darkSkyService = darkSkyService;
     }
 
     @Override
-    public Observable<GoogleApi.GoogleLocation> getCurrentLocation(String address) {
+    public Observable<DarkSkyApi.WeatherResponse> getCurrentLocation(String address) {
 
         return googleApi.getAddress(address)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .filter(googleAddress -> !googleAddress.getAddressInformation().isEmpty())
-                .map(googleAddress -> googleAddress.getAddressInformation().get(0).getGoogleGeometry().getGoogleLocation());
+                .map(googleAddress -> googleAddress.getAddressInformation().get(0).getGoogleGeometry().getGoogleLocation())
+                .flatMap(googleLocation -> darkSkyService.getWeather(googleLocation.getLatitude(), googleLocation.getLongitude()));
+    }
+
+    @Override
+    public Observable<String> getFormattedAddress(String address) {
+        return googleApi.getAddress(address)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .filter(googleAddress -> !googleAddress.getAddressInformation().isEmpty())
+                .map(googleAddress -> googleAddress.getAddressInformation().get(0).getFormattedAddress());
     }
 }
