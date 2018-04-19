@@ -5,4 +5,16 @@ package com.elkcreek.rodneytressler.intermediateandroid.ui.MainView;
  */
 
 public interface MainView {
+    void getCurrentLocation();
+
+    void showLocation(String locationText);
+
+    void showDailyTemp(String highTemp, String lowTemp);
+
+    void showCurrentTemperature(double currentTemperature);
+
+    void showDailySummary(String summary);
+
+
+    void showIcon(String emoji);
 }

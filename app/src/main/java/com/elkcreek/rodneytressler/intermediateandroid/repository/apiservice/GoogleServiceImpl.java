@@ -27,22 +27,13 @@ public class GoogleServiceImpl implements GoogleService {
     }
 
     @Override
-    public Observable<DarkSkyApi.WeatherResponse> getCurrentLocation(String address) {
+    public Observable<GoogleApi.AddressInformation> getWeather(String address) {
 
         return googleApi.getAddress(address)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .filter(googleAddress -> !googleAddress.getAddressInformation().isEmpty())
-                .map(googleAddress -> googleAddress.getAddressInformation().get(0).getGoogleGeometry().getGoogleLocation())
-                .flatMap(googleLocation -> darkSkyService.getWeather(googleLocation.getLatitude(), googleLocation.getLongitude()));
+                .map(googleAddress -> googleAddress.getAddressInformation().get(0));
     }
 
-    @Override
-    public Observable<String> getFormattedAddress(String address) {
-        return googleApi.getAddress(address)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .filter(googleAddress -> !googleAddress.getAddressInformation().isEmpty())
-                .map(googleAddress -> googleAddress.getAddressInformation().get(0).getFormattedAddress());
-    }
 }

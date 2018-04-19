@@ -10,6 +10,5 @@ import io.reactivex.Observable;
  */
 
 public interface GoogleService {
-    Observable<DarkSkyApi.WeatherResponse> getCurrentLocation(String address);
-    Observable<String> getFormattedAddress(String address);
+    Observable<GoogleApi.AddressInformation> getWeather(String address);
 }
