@@ -69,6 +69,7 @@ public class DailyForecastAdapter extends RecyclerView.Adapter<DailyForecastAdap
         }
 
         public void bindDays(DarkSkyApi.Days days) {
+            dayDate.setText(days.getDate());
             dayEmoji.setText(showIcon(days.getIcon()));
             daySummary.setText(days.getSummary());
             dayHigh.setText(days.highTempString());

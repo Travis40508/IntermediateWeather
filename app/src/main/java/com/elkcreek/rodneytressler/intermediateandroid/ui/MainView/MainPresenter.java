@@ -8,7 +8,14 @@ import com.elkcreek.rodneytressler.intermediateandroid.repository.apiservice.Dar
 import com.elkcreek.rodneytressler.intermediateandroid.repository.apiservice.GoogleService;
 import com.elkcreek.rodneytressler.intermediateandroid.utils.Icons;
 
+import org.joda.time.DateTime;
+
+import java.text.DateFormatSymbols;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -52,9 +59,15 @@ public class MainPresenter {
                 .doOnNext(addressInformation -> view.showLocation(addressInformation.getFormattedAddress()))
                 .flatMap(addressInformation -> darkSkyService.getWeather(addressInformation.getGoogleGeometry().getGoogleLocation().getLatitude(),
                         addressInformation.getGoogleGeometry().getGoogleLocation().getLongitude()))
+                .repeat()
+                .takeUntil(weatherResponse -> !weatherResponse.getDailyWeather().getDaysList().get(0).getIcon().isEmpty())
                 .doOnNext(weatherResponse -> {
                     for(int i = 1; i <= 7; i++) {
-                        weeklyForecast.add(weatherResponse.getDailyWeather().getDaysList().get(i));
+                        DarkSkyApi.Days day = weatherResponse.getDailyWeather().getDaysList().get(i);
+                        DateTime dateTime = new DateTime();
+                        DateTime newDate = dateTime.plusDays(i);
+                        day.setDate(newDate.dayOfWeek().getAsShortText() + " " + newDate.monthOfYear().getAsShortText() + ", " + newDate.dayOfMonth().getAsShortText());
+                        weeklyForecast.add(day);
                     }
                 })
                 .subscribe(weatherResponse -> {
@@ -67,6 +80,7 @@ public class MainPresenter {
                     view.hideFrameLayout();
                     view.hideProgressBar();
                 }, throwable -> {
+                    throwable.printStackTrace();
                     view.areaNotFoundToast();
                 }));
     }

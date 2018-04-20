@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements MainView, ChangeL
         };
 
         mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5, mLocationListener);
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 500, 5, mLocationListener);
     }
 
     @Override

@@ -59,7 +59,8 @@ public class WeeklyForecastFragment extends Fragment implements WeeklyForecastVi
     @Override
     public void showWeeklyForecast(List<DarkSkyApi.Days> weeklyForecast) {
         adapter = new DailyForecastAdapter(weeklyForecast);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }

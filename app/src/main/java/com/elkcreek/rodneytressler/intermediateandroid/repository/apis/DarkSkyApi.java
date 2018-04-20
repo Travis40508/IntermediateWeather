@@ -4,11 +4,17 @@ package com.elkcreek.rodneytressler.intermediateandroid.repository.apis;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.elkcreek.rodneytressler.intermediateandroid.BuildConfig;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -89,12 +95,15 @@ public interface DarkSkyApi {
         @SerializedName("precipProbability")
         @Expose private double precipChance;
 
+        private String date;
+
         protected Days(Parcel in) {
             icon = in.readString();
             summary = in.readString();
             highTemp = in.readDouble();
             lowTemp = in.readDouble();
             precipChance = in.readDouble();
+            date = in.readString();
         }
 
         @Override
@@ -104,6 +113,7 @@ public interface DarkSkyApi {
             dest.writeDouble(highTemp);
             dest.writeDouble(lowTemp);
             dest.writeDouble(precipChance);
+            dest.writeString(date);
         }
 
         @Override
@@ -153,6 +163,14 @@ public interface DarkSkyApi {
 
         public String precipChanceString() {
             return String.valueOf(precipChance);
+        }
+
+        public String getDate() {
+            return date;
+        }
+
+        public void setDate(String date) {
+            this.date = date;
         }
     }
 }

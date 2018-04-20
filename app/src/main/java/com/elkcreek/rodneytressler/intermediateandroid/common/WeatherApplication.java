@@ -7,6 +7,8 @@ import com.elkcreek.rodneytressler.intermediateandroid.common.di.components.Dagg
 import com.elkcreek.rodneytressler.intermediateandroid.common.di.modules.ApplicationModule;
 import com.elkcreek.rodneytressler.intermediateandroid.common.di.modules.NetworkModule;
 
+import net.danlew.android.joda.JodaTimeAndroid;
+
 import javax.inject.Inject;
 
 import dagger.android.AndroidInjector;
@@ -33,6 +35,7 @@ public class WeatherApplication extends Application implements HasActivityInject
                 .networkModule(new NetworkModule(googleBaseUrl, darkSkyBaseUrl))
                 .build()
                 .inject(this);
+        JodaTimeAndroid.init(this);
     }
 
     @Override
