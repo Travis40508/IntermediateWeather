@@ -3,6 +3,7 @@ package com.elkcreek.rodneytressler.intermediateandroid.ui.MainView;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -18,7 +19,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.elkcreek.rodneytressler.intermediateandroid.R;
+import com.elkcreek.rodneytressler.intermediateandroid.repository.apis.DarkSkyApi;
 import com.elkcreek.rodneytressler.intermediateandroid.ui.ChangeLocationView.ChangeLocationFragment;
+import com.elkcreek.rodneytressler.intermediateandroid.ui.WeeklyForecaseView.WeeklyForecastFragment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -54,6 +60,8 @@ public class MainActivity extends AppCompatActivity implements MainView, ChangeL
     private LocationListener mLocationListener;
     private LocationManager mLocationManager;
     private ChangeLocationFragment fragment;
+    private WeeklyForecastFragment weeklyForecastFragment;
+    public static final String WEEKLY_FORECAST_TAG = "weekly_forecast_tag";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,12 +170,20 @@ public class MainActivity extends AppCompatActivity implements MainView, ChangeL
     @Override
     public void showFrameLayout() {
         frameLayout.setVisibility(View.VISIBLE);
-        progressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void showProgressBar() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
 
+    @Override
+    public void showWeeklyForecast(List<DarkSkyApi.Days> weeklyForecast) {
+        weeklyForecastFragment = WeeklyForecastFragment.newInstance();
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList(WEEKLY_FORECAST_TAG, (ArrayList<? extends Parcelable>) weeklyForecast);
+        weeklyForecastFragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_holder, weeklyForecastFragment).commit();
     }
 
     @Override
@@ -184,7 +200,7 @@ public class MainActivity extends AppCompatActivity implements MainView, ChangeL
                 presenter.changeLocationClicked();
                 return true;
             case R.id.menu_weekly_forecast :
-                Toast.makeText(this, "WEEKLY FORECAST", Toast.LENGTH_SHORT).show();
+                presenter.weeklyForecastClicked();
                 return true;
             default :
                 return super.onOptionsItemSelected(item);

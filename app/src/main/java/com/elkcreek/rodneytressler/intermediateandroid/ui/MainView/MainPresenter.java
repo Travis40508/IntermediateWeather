@@ -81,4 +81,7 @@ public class MainPresenter {
         view.showChangeLocationFragment();
     }
 
+    public void weeklyForecastClicked() {
+        view.showWeeklyForecast(weeklyForecast);
+    }
 }

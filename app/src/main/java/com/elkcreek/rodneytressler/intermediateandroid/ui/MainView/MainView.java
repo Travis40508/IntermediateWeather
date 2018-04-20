@@ -1,5 +1,9 @@
 package com.elkcreek.rodneytressler.intermediateandroid.ui.MainView;
 
+import com.elkcreek.rodneytressler.intermediateandroid.repository.apis.DarkSkyApi;
+
+import java.util.List;
+
 /**
  * Created by rodneytressler on 4/18/18.
  */
@@ -31,4 +35,6 @@ public interface MainView {
     void showFrameLayout();
 
     void showProgressBar();
+
+    void showWeeklyForecast(List<DarkSkyApi.Days> weeklyForecast);
 }

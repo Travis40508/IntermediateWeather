@@ -2,6 +2,9 @@ package com.elkcreek.rodneytressler.intermediateandroid.repository.apis;
 
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.elkcreek.rodneytressler.intermediateandroid.BuildConfig;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -70,7 +73,7 @@ public interface DarkSkyApi {
         }
     }
 
-    class Days {
+    class Days implements Parcelable {
         @SerializedName("icon")
         @Expose private String icon;
 
@@ -85,6 +88,40 @@ public interface DarkSkyApi {
 
         @SerializedName("precipProbability")
         @Expose private double precipChance;
+
+        protected Days(Parcel in) {
+            icon = in.readString();
+            summary = in.readString();
+            highTemp = in.readDouble();
+            lowTemp = in.readDouble();
+            precipChance = in.readDouble();
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(icon);
+            dest.writeString(summary);
+            dest.writeDouble(highTemp);
+            dest.writeDouble(lowTemp);
+            dest.writeDouble(precipChance);
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        public static final Creator<Days> CREATOR = new Creator<Days>() {
+            @Override
+            public Days createFromParcel(Parcel in) {
+                return new Days(in);
+            }
+
+            @Override
+            public Days[] newArray(int size) {
+                return new Days[size];
+            }
+        };
 
         public String getIcon() {
             return icon;
