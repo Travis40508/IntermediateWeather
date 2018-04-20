@@ -162,7 +162,7 @@ public interface DarkSkyApi {
         }
 
         public String precipChanceString() {
-            return String.valueOf(precipChance);
+            return String.valueOf(Math.ceil(precipChance * 100));
         }
 
         public String getDate() {

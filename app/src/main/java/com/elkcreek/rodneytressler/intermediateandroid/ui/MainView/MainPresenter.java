@@ -52,6 +52,7 @@ public class MainPresenter {
     }
 
     public void locationRetrieved(String location) {
+        weeklyForecast.clear();
         view.showFrameLayout();
         view.showProgressBar();
 
@@ -74,9 +75,9 @@ public class MainPresenter {
                     showIcon(weatherResponse.getDailyWeather().getDaysList().get(0).getIcon());
                     view.showDailySummary(weatherResponse.getDailyWeather().getDaysList().get(0).getSummary());
                     view.showDailyTemp(
-                            String.valueOf(Math.ceil(weatherResponse.getDailyWeather().getDaysList().get(0).getHighTemp())),
-                            String.valueOf(Math.ceil(weatherResponse.getDailyWeather().getDaysList().get(0).getLowTemp())));
-                    view.showCurrentTemperature(Math.ceil(weatherResponse.getCurrentWeather().getCurrentTemperature()));
+                            String.valueOf(Math.ceil(weatherResponse.getDailyWeather().getDaysList().get(0).getHighTemp())) + (char) 0x00B0,
+                            String.valueOf(Math.ceil(weatherResponse.getDailyWeather().getDaysList().get(0).getLowTemp())) + (char) 0x00B0);
+                    view.showCurrentTemperature(String.valueOf(Math.ceil(weatherResponse.getCurrentWeather().getCurrentTemperature())) + (char) 0x00B0);
                     view.hideFrameLayout();
                     view.hideProgressBar();
                 }, throwable -> {

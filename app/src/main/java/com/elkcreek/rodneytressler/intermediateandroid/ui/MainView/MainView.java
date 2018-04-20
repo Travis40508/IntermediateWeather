@@ -15,7 +15,7 @@ public interface MainView {
 
     void showDailyTemp(String highTemp, String lowTemp);
 
-    void showCurrentTemperature(double currentTemperature);
+    void showCurrentTemperature(String currentTemperature);
 
     void showDailySummary(String summary);
 

@@ -8,4 +8,6 @@ public interface ChangeLocationView {
     void loadNewLocation(String location);
 
     void detachFragment();
+
+    void collapseKeyboard();
 }

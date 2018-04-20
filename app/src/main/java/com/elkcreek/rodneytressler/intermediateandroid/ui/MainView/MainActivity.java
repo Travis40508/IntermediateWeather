@@ -125,8 +125,8 @@ public class MainActivity extends AppCompatActivity implements MainView, ChangeL
     }
 
     @Override
-    public void showCurrentTemperature(double currentTemperature) {
-        this.currentTemperature.setText(String.valueOf(currentTemperature));
+    public void showCurrentTemperature(String currentTemperature) {
+        this.currentTemperature.setText(currentTemperature);
     }
 
     @Override

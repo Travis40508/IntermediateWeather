@@ -11,6 +11,7 @@ public class ChangeLocationPresenter {
 
     public void donePressed(String location) {
         view.loadNewLocation(location);
+        view.collapseKeyboard();
         view.detachFragment();
     }
 

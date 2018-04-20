@@ -78,9 +78,9 @@ public class DailyForecastAdapter extends RecyclerView.Adapter<DailyForecastAdap
             dayDate.setText(days.getDate());
             dayEmoji.setText(showIcon(days.getIcon()));
             daySummary.setText(days.getSummary());
-            dayHigh.setText(days.highTempString());
-            dayLow.setText(days.lowTempString());
-            dayPrecipChance.setText(days.precipChanceString());
+            dayHigh.setText(days.highTempString() + (char) 0x00B0);
+            dayLow.setText(days.lowTempString() + (char) 0x00B0);
+            dayPrecipChance.setText(days.precipChanceString() + "%");
         }
 
         private int getBackgroundColor(double highTemp) {
