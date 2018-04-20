@@ -5,7 +5,11 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -137,5 +141,32 @@ public class MainActivity extends AppCompatActivity implements MainView {
     @Override
     public void areaNotFoundToast() {
         Toast.makeText(this, "Area not found, please try again.", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showToolbar() {
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_action_bar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.menu_change_location :
+                Toast.makeText(this, "CHANGE LOCATION", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.menu_weekly_forecast :
+                Toast.makeText(this, "WEEKLY FORECAST", Toast.LENGTH_SHORT).show();
+                return true;
+            default :
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

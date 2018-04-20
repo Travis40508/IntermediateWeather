@@ -23,4 +23,6 @@ public interface MainView {
     void hideProgressBar();
 
     void areaNotFoundToast();
+
+    void showToolbar();
 }

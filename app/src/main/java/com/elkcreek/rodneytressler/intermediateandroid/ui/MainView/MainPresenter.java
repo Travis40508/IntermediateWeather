@@ -40,6 +40,7 @@ public class MainPresenter {
 
         if (view != null) {
             view.getCurrentLocation();
+            view.showToolbar();
         }
     }
 
