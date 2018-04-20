@@ -105,5 +105,17 @@ public interface DarkSkyApi {
         public double getPrecipChance() {
             return precipChance;
         }
+
+        public String lowTempString() {
+            return String.valueOf(lowTemp);
+        }
+
+        public String highTempString() {
+            return String.valueOf(highTemp);
+        }
+
+        public String precipChanceString() {
+            return String.valueOf(precipChance);
+        }
     }
 }
