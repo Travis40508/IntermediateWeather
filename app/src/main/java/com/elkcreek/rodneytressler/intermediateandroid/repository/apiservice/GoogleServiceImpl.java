@@ -27,7 +27,7 @@ public class GoogleServiceImpl implements GoogleService {
     }
 
     @Override
-    public Observable<GoogleApi.AddressInformation> getWeather(String address) {
+    public Observable<GoogleApi.AddressInformation> getLocation(String address) {
 
         return googleApi.getAddress(address)
                 .subscribeOn(Schedulers.io())

@@ -17,4 +17,10 @@ public interface MainView {
 
 
     void showIcon(String emoji);
+
+    void hideFrameLayout();
+
+    void hideProgressBar();
+
+    void areaNotFoundToast();
 }

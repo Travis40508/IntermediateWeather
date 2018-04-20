@@ -6,8 +6,12 @@ import android.location.LocationManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.elkcreek.rodneytressler.intermediateandroid.R;
 
@@ -36,6 +40,12 @@ public class MainActivity extends AppCompatActivity implements MainView {
     @BindView(R.id.image_icon)
     protected TextView weatherIcon;
 
+    @BindView(R.id.frame_layout)
+    protected FrameLayout frameLayout;
+
+    @BindView(R.id.progress_bar)
+    protected ProgressBar progressBar;
+
     private LocationListener mLocationListener;
     private LocationManager mLocationManager;
 
@@ -45,9 +55,16 @@ public class MainActivity extends AppCompatActivity implements MainView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+
+
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         presenter.onCreate(this);
-
-
     }
 
     @Override
@@ -105,5 +122,20 @@ public class MainActivity extends AppCompatActivity implements MainView {
     @Override
     public void showIcon(String emoji) {
         weatherIcon.setText(emoji);
+    }
+
+    @Override
+    public void hideFrameLayout() {
+        frameLayout.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void hideProgressBar() {
+        progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void areaNotFoundToast() {
+        Toast.makeText(this, "Area not found, please try again.", Toast.LENGTH_SHORT).show();
     }
 }

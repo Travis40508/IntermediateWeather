@@ -10,5 +10,5 @@ import io.reactivex.Observable;
  */
 
 public interface GoogleService {
-    Observable<GoogleApi.AddressInformation> getWeather(String address);
+    Observable<GoogleApi.AddressInformation> getLocation(String address);
 }
