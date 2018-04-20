@@ -187,6 +187,21 @@ public class MainActivity extends AppCompatActivity implements MainView, ChangeL
     }
 
     @Override
+    public void removeChangeLocationFragment() {
+        getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+    }
+
+    @Override
+    public void removeWeeklyForecastFragment() {
+        getSupportFragmentManager().beginTransaction().remove(weeklyForecastFragment).commit();
+    }
+
+    @Override
+    public void closeApp() {
+        super.onBackPressed();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_action_bar, menu);
@@ -215,5 +230,10 @@ public class MainActivity extends AppCompatActivity implements MainView, ChangeL
     @Override
     public void detachFragment() {
         getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        presenter.backPressed(fragment != null && fragment.isAdded(), weeklyForecastFragment != null && weeklyForecastFragment.isAdded());
     }
 }

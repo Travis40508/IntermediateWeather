@@ -98,4 +98,14 @@ public class MainPresenter {
     public void weeklyForecastClicked() {
         view.showWeeklyForecast(weeklyForecast);
     }
+
+    public void backPressed(boolean changeLocationFragmentIsAdded, boolean weeklyForecastFragmentIsAdded) {
+        if(changeLocationFragmentIsAdded) {
+            view.removeChangeLocationFragment();
+        } else if (weeklyForecastFragmentIsAdded) {
+            view.removeWeeklyForecastFragment();
+        } else {
+            view.closeApp();
+        }
+    }
 }

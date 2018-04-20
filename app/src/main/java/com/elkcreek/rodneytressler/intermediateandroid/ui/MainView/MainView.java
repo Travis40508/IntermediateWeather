@@ -37,4 +37,10 @@ public interface MainView {
     void showProgressBar();
 
     void showWeeklyForecast(List<DarkSkyApi.Days> weeklyForecast);
+
+    void removeChangeLocationFragment();
+
+    void removeWeeklyForecastFragment();
+
+    void closeApp();
 }
