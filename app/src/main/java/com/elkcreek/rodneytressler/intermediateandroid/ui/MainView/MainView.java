@@ -25,4 +25,10 @@ public interface MainView {
     void areaNotFoundToast();
 
     void showToolbar();
+
+    void showChangeLocationFragment();
+
+    void showFrameLayout();
+
+    void showProgressBar();
 }

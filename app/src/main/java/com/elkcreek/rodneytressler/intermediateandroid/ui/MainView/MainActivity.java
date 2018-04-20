@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.elkcreek.rodneytressler.intermediateandroid.R;
+import com.elkcreek.rodneytressler.intermediateandroid.ui.ChangeLocationView.ChangeLocationFragment;
 
 import javax.inject.Inject;
 
@@ -25,7 +26,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.android.AndroidInjection;
 
-public class MainActivity extends AppCompatActivity implements MainView {
+public class MainActivity extends AppCompatActivity implements MainView, ChangeLocationFragment.Callback {
 
     @Inject protected MainPresenter presenter;
 
@@ -52,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     private LocationListener mLocationListener;
     private LocationManager mLocationManager;
+    private ChangeLocationFragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +81,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
                 double lat = location.getLatitude();
                 double lon = location.getLongitude();
 
-                presenter.locationRetrieved(lat, lon);
+                String newLocation = lat + ", " + lon;
+                presenter.locationRetrieved(newLocation);
             }
 
             @Override
@@ -150,6 +153,24 @@ public class MainActivity extends AppCompatActivity implements MainView {
     }
 
     @Override
+    public void showChangeLocationFragment() {
+        fragment = ChangeLocationFragment.newInstance();
+        fragment.attachParent(this);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_holder, fragment).commit();
+    }
+
+    @Override
+    public void showFrameLayout() {
+        frameLayout.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showProgressBar() {
+
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_action_bar, menu);
@@ -160,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.menu_change_location :
-                Toast.makeText(this, "CHANGE LOCATION", Toast.LENGTH_SHORT).show();
+                presenter.changeLocationClicked();
                 return true;
             case R.id.menu_weekly_forecast :
                 Toast.makeText(this, "WEEKLY FORECAST", Toast.LENGTH_SHORT).show();
@@ -168,5 +189,15 @@ public class MainActivity extends AppCompatActivity implements MainView {
             default :
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void locationChanged(String location) {
+        presenter.locationRetrieved(location);
+    }
+
+    @Override
+    public void detachFragment() {
+        getSupportFragmentManager().beginTransaction().remove(fragment).commit();
     }
 }

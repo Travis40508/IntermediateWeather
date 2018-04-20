@@ -44,8 +44,9 @@ public class MainPresenter {
         }
     }
 
-    public void locationRetrieved(double lat, double lon) {
-        String location = lat + ", " + lon;
+    public void locationRetrieved(String location) {
+        view.showFrameLayout();
+        view.showProgressBar();
 
         compositeDisposable.add(googleService.getLocation(location)
                 .doOnNext(addressInformation -> view.showLocation(addressInformation.getFormattedAddress()))
@@ -75,4 +76,9 @@ public class MainPresenter {
         String emoji = new String(Character.toChars(uniCodeIcon));
         view.showIcon(emoji);
     }
+
+    public void changeLocationClicked() {
+        view.showChangeLocationFragment();
+    }
+
 }
