@@ -1,6 +1,5 @@
 package com.elkcreek.rodneytressler.intermediateandroid.ui.MainView;
 
-import android.content.Context;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -23,9 +22,6 @@ import com.elkcreek.rodneytressler.intermediateandroid.R;
 import com.elkcreek.rodneytressler.intermediateandroid.repository.apis.DarkSkyApi;
 import com.elkcreek.rodneytressler.intermediateandroid.ui.ChangeLocationView.ChangeLocationFragment;
 import com.elkcreek.rodneytressler.intermediateandroid.ui.WeeklyForecaseView.WeeklyForecastFragment;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +61,6 @@ public class MainActivity extends AppCompatActivity implements MainView, ChangeL
     private LocationManager mLocationManager;
     private ChangeLocationFragment fragment;
     private WeeklyForecastFragment weeklyForecastFragment;
-    private FusedLocationProviderClient mFusedLocationClient;
     public static final String WEEKLY_FORECAST_TAG = "weekly_forecast_tag";
 
     @Override
@@ -75,23 +70,43 @@ public class MainActivity extends AppCompatActivity implements MainView, ChangeL
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         presenter.onCreate(this);
+
+
+
     }
 
 
 
     @Override
     public void getCurrentLocation() {
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        mFusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+        mLocationListener = new LocationListener() {
             @Override
-            public void onSuccess(Location location) {
-                if(location != null) {
-                    //TODO figure this out
-                    String newLocation = location.getLatitude() + ", " + location.getLongitude();
-                    presenter.locationRetrieved(newLocation);
-                }
+            public void onLocationChanged(Location location) {
+                double lat = location.getLatitude();
+                double lon = location.getLongitude();
+
+                String newLocation = lat + ", " + lon;
+                presenter.locationRetrieved(newLocation);
             }
-        });
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+        };
+
+        mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 500, 5, mLocationListener);
     }
 
     @Override

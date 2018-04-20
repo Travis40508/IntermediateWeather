@@ -48,20 +48,18 @@ public class MainPresenter {
         if (view != null) {
             view.getCurrentLocation();
             view.showToolbar();
+            view.showFrameLayout();
+            view.showProgressBar();
         }
     }
 
     public void locationRetrieved(String location) {
         weeklyForecast.clear();
-        view.showFrameLayout();
-        view.showProgressBar();
 
         compositeDisposable.add(googleService.getLocation(location)
                 .doOnNext(addressInformation -> view.showLocation(addressInformation.getFormattedAddress()))
                 .flatMap(addressInformation -> darkSkyService.getWeather(addressInformation.getGoogleGeometry().getGoogleLocation().getLatitude(),
                         addressInformation.getGoogleGeometry().getGoogleLocation().getLongitude()))
-                .repeat()
-                .takeUntil(weatherResponse -> !weatherResponse.getDailyWeather().getDaysList().get(0).getIcon().isEmpty())
                 .doOnNext(weatherResponse -> {
                     for(int i = 1; i <= 7; i++) {
                         DarkSkyApi.Days day = weatherResponse.getDailyWeather().getDaysList().get(i);
@@ -72,7 +70,7 @@ public class MainPresenter {
                     }
                 })
                 .subscribe(weatherResponse -> {
-                    showIcon(weatherResponse.getDailyWeather().getDaysList().get(0).getIcon());
+                    view.showIcon(showIcon(weatherResponse.getDailyWeather().getDaysList().get(0).getIcon()));
                     view.showDailySummary(weatherResponse.getDailyWeather().getDaysList().get(0).getSummary());
                     view.showDailyTemp(
                             String.valueOf(Math.ceil(weatherResponse.getDailyWeather().getDaysList().get(0).getHighTemp())) + (char) 0x00B0,
@@ -86,10 +84,10 @@ public class MainPresenter {
                 }));
     }
 
-    private void showIcon(String icon) {
+    private String showIcon(String icon) {
         int uniCodeIcon = Icons.getWeather(icon);
         String emoji = new String(Character.toChars(uniCodeIcon));
-        view.showIcon(emoji);
+        return emoji;
     }
 
     public void changeLocationClicked() {
