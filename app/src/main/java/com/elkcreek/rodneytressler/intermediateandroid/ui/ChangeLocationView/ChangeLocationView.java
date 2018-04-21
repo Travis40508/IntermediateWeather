@@ -10,4 +10,6 @@ public interface ChangeLocationView {
     void detachFragment();
 
     void collapseKeyboard();
+
+    void showSuggestions(String[] suggestionsArray);
 }

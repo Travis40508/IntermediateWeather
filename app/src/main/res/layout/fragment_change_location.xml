@@ -6,7 +6,7 @@
     android:background="@android:color/white"
     android:clickable="true">
 
-    <EditText
+    <AutoCompleteTextView
         android:id="@+id/input_change_location"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"

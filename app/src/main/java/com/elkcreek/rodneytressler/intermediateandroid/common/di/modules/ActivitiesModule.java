@@ -1,5 +1,6 @@
 package com.elkcreek.rodneytressler.intermediateandroid.common.di.modules;
 
+import com.elkcreek.rodneytressler.intermediateandroid.ui.ChangeLocationView.ChangeLocationFragment;
 import com.elkcreek.rodneytressler.intermediateandroid.ui.MainView.MainActivity;
 
 import dagger.Module;
@@ -14,4 +15,7 @@ public abstract class ActivitiesModule {
 
     @ContributesAndroidInjector
     abstract MainActivity contributesMainActivityInjector();
+
+    @ContributesAndroidInjector
+    abstract ChangeLocationFragment contributesChangeLocationFragmentInjector();
 }

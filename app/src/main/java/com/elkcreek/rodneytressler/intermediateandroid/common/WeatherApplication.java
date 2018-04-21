@@ -2,6 +2,7 @@ package com.elkcreek.rodneytressler.intermediateandroid.common;
 
 import android.app.Activity;
 import android.app.Application;
+import android.support.v4.app.Fragment;
 
 import com.elkcreek.rodneytressler.intermediateandroid.common.di.components.DaggerApplicationComponent;
 import com.elkcreek.rodneytressler.intermediateandroid.common.di.modules.ApplicationModule;
@@ -14,19 +15,23 @@ import javax.inject.Inject;
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasActivityInjector;
+import dagger.android.support.HasSupportFragmentInjector;
 
 /**
  * Created by rodneytressler on 4/18/18.
  */
 
-public class WeatherApplication extends Application implements HasActivityInjector{
+public class WeatherApplication extends Application implements HasActivityInjector, HasSupportFragmentInjector{
 
     String googleBaseUrl = "https://maps.googleapis.com/maps/api/geocode/";
     String autoCompleteBaseUrl = "https://maps.googleapis.com/maps/api/place/autocomplete/";
     String darkSkyBaseUrl = "https://api.darksky.net/forecast/";
 
     @Inject
-    DispatchingAndroidInjector<Activity> dispatchingActivityInjector;
+    protected DispatchingAndroidInjector<Activity> dispatchingActivityInjector;
+
+    @Inject
+    protected DispatchingAndroidInjector<Fragment> dispatchingFragmentInjector;
 
     @Override
     public void onCreate() {
@@ -42,5 +47,11 @@ public class WeatherApplication extends Application implements HasActivityInject
     @Override
     public AndroidInjector<Activity> activityInjector() {
         return dispatchingActivityInjector;
+    }
+
+
+    @Override
+    public AndroidInjector<Fragment> supportFragmentInjector() {
+        return dispatchingFragmentInjector;
     }
 }

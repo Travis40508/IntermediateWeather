@@ -136,7 +136,6 @@ public class MainActivity extends AppCompatActivity implements MainView, ChangeL
                     String newLocation = location.getLatitude() + ", " + location.getLongitude();
                     presenter.locationRetrieved(newLocation);
                 } else {
-                    presenter.locationIsNull();
                     mLocationListener = new LocationListener() {
                         @Override
                         public void onLocationChanged(Location location) {
