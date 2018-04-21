@@ -119,4 +119,8 @@ public class MainPresenter {
         view.showFrameLayout();
         view.getCurrentLocation();
     }
+
+    public void locationIsNull() {
+        view.toastEnableLocation();
+    }
 }

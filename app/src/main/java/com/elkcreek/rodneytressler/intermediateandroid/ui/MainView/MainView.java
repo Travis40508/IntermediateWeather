@@ -43,4 +43,6 @@ public interface MainView {
     void removeWeeklyForecastFragment();
 
     void closeApp();
+
+    void toastEnableLocation();
 }

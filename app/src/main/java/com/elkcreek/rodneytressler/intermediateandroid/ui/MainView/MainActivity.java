@@ -2,6 +2,7 @@ package com.elkcreek.rodneytressler.intermediateandroid.ui.MainView;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -127,40 +128,44 @@ public class MainActivity extends AppCompatActivity implements MainView, ChangeL
 
     @Override
     public void getCurrentLocation() {
-//        mLocationListener = new LocationListener() {
-//            @Override
-//            public void onLocationChanged(Location location) {
-//                double lat = location.getLatitude();
-//                double lon = location.getLongitude();
-//
-//                String newLocation = lat + ", " + lon;
-//                presenter.locationRetrieved(newLocation);
-//            }
-//
-//            @Override
-//            public void onStatusChanged(String provider, int status, Bundle extras) {
-//
-//            }
-//
-//            @Override
-//            public void onProviderEnabled(String provider) {
-//
-//            }
-//
-//            @Override
-//            public void onProviderDisabled(String provider) {
-//
-//            }
-//        };
-//
-//        mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-//        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 500, 5, mLocationListener);
         providerClient = LocationServices.getFusedLocationProviderClient(this);
         providerClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
-                String newLocation = location.getLatitude() + ", " + location.getLongitude();
-                presenter.locationRetrieved(newLocation);
+                if(location != null) {
+                    String newLocation = location.getLatitude() + ", " + location.getLongitude();
+                    presenter.locationRetrieved(newLocation);
+                } else {
+                    presenter.locationIsNull();
+                    mLocationListener = new LocationListener() {
+                        @Override
+                        public void onLocationChanged(Location location) {
+                            double lat = location.getLatitude();
+                            double lon = location.getLongitude();
+
+                            String newLocation = lat + ", " + lon;
+                            presenter.locationRetrieved(newLocation);
+                        }
+
+                        @Override
+                        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                        }
+
+                        @Override
+                        public void onProviderEnabled(String provider) {
+
+                        }
+
+                        @Override
+                        public void onProviderDisabled(String provider) {
+
+                        }
+                    };
+
+                    mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+                    mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 500, 5, mLocationListener);
+                }
             }
         });
     }
@@ -210,6 +215,7 @@ public class MainActivity extends AppCompatActivity implements MainView, ChangeL
     public void showToolbar() {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
+        myToolbar.setTitleTextColor(Color.WHITE);
     }
 
     @Override
@@ -251,6 +257,11 @@ public class MainActivity extends AppCompatActivity implements MainView, ChangeL
     @Override
     public void closeApp() {
         super.onBackPressed();
+    }
+
+    @Override
+    public void toastEnableLocation() {
+        Toast.makeText(this, "Please enable location services and restart this application", Toast.LENGTH_SHORT).show();
     }
 
     @Override
