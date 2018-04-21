@@ -22,6 +22,7 @@ import dagger.android.HasActivityInjector;
 public class WeatherApplication extends Application implements HasActivityInjector{
 
     String googleBaseUrl = "https://maps.googleapis.com/maps/api/geocode/";
+    String autoCompleteBaseUrl = "https://maps.googleapis.com/maps/api/place/autocomplete/";
     String darkSkyBaseUrl = "https://api.darksky.net/forecast/";
 
     @Inject
@@ -32,7 +33,7 @@ public class WeatherApplication extends Application implements HasActivityInject
         super.onCreate();
         DaggerApplicationComponent.builder()
                 .applicationModule(new ApplicationModule(this))
-                .networkModule(new NetworkModule(googleBaseUrl, darkSkyBaseUrl))
+                .networkModule(new NetworkModule(googleBaseUrl, darkSkyBaseUrl, autoCompleteBaseUrl))
                 .build()
                 .inject(this);
         JodaTimeAndroid.init(this);

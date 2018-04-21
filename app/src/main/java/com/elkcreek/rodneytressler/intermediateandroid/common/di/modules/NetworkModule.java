@@ -1,7 +1,10 @@
 package com.elkcreek.rodneytressler.intermediateandroid.common.di.modules;
 
+import com.elkcreek.rodneytressler.intermediateandroid.repository.apis.AutoCompleteApi;
 import com.elkcreek.rodneytressler.intermediateandroid.repository.apis.DarkSkyApi;
 import com.elkcreek.rodneytressler.intermediateandroid.repository.apis.GoogleApi;
+import com.elkcreek.rodneytressler.intermediateandroid.repository.apiservice.AutoCompleteService;
+import com.elkcreek.rodneytressler.intermediateandroid.repository.apiservice.AutoCompleteServiceImpl;
 import com.elkcreek.rodneytressler.intermediateandroid.repository.apiservice.DarkSkyService;
 import com.elkcreek.rodneytressler.intermediateandroid.repository.apiservice.DarkSkyServiceImpl;
 import com.elkcreek.rodneytressler.intermediateandroid.repository.apiservice.GoogleService;
@@ -29,12 +32,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Module
 public class NetworkModule {
 
-    private String googleBaseUrl;
-    private String darkSkyBaseUrl;
+    private final String autoCompleteBaseUrl;
+    private final String googleBaseUrl;
+    private final String darkSkyBaseUrl;
 
-    public NetworkModule(String googleBaseUrl, String darkSkyBaseUrl) {
+    public NetworkModule(String googleBaseUrl, String darkSkyBaseUrl, String autoCompleteBaseUrl) {
         this.googleBaseUrl = googleBaseUrl;
         this.darkSkyBaseUrl = darkSkyBaseUrl;
+        this.autoCompleteBaseUrl = autoCompleteBaseUrl;
     }
 
     @Provides
@@ -43,6 +48,19 @@ public class NetworkModule {
     Retrofit providesGoogleRetrofit(OkHttpClient okHttpClient) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(googleBaseUrl)
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(okHttpClient)
+                .build();
+        return retrofit;
+    }
+
+    @Provides
+    @Named("autocomplete retrofit")
+    @Singleton
+    Retrofit providesAutoCompleteRetrofit(OkHttpClient okHttpClient) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(autoCompleteBaseUrl)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(okHttpClient)
@@ -75,6 +93,14 @@ public class NetworkModule {
 
     @Provides
     @Singleton
+    AutoCompleteApi providesAutoCompleteApi(@Named("autocomplete retrofit") Retrofit retrofit) {
+        AutoCompleteApi autoCompleteApi = retrofit.create(AutoCompleteApi.class);
+
+        return autoCompleteApi;
+    }
+
+    @Provides
+    @Singleton
     GoogleApi providesGoogleApi(@Named("google retrofit") Retrofit retrofit) {
         GoogleApi googleApi = retrofit.create(GoogleApi.class);
 
@@ -101,5 +127,10 @@ public class NetworkModule {
         return new GoogleServiceImpl(googleApi, darkSkyService);
     }
 
+    @Provides
+    @Singleton
+    AutoCompleteService providesAutoCompleteService(AutoCompleteApi autoCompleteApi) {
+        return new AutoCompleteServiceImpl(autoCompleteApi);
+    }
 
 }

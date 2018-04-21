@@ -20,6 +20,7 @@ android {
     buildTypes.each {
         it.buildConfigField("String", "API_KEY_DARKSKY", ApiKeyDarkSky)
         it.buildConfigField("String", "API_KEY_GOOGLEGEO", ApiKeyGoogleGeo)
+        it.buildConfigField("String", "API_KEY_GOOGLE_AUTOCOMPLETE", APIKeyGoogleAutoComplete)
     }
     compileOptions {
         targetCompatibility 1.8
