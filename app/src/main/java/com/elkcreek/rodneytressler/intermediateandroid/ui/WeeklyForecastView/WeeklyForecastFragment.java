@@ -1,4 +1,4 @@
-package com.elkcreek.rodneytressler.intermediateandroid.ui.WeeklyForecaseView;
+package com.elkcreek.rodneytressler.intermediateandroid.ui.WeeklyForecastView;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

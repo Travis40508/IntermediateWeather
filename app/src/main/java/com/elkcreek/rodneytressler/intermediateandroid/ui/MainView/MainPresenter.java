@@ -20,7 +20,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by rodneytressler on 4/18/18.
@@ -30,7 +32,6 @@ public class MainPresenter {
 
     private final GoogleService googleService;
     private final DarkSkyService darkSkyService;
-    private CompositeDisposable compositeDisposable;
     private MainView view;
     private List<DarkSkyApi.Days> weeklyForecast;
 
@@ -38,7 +39,6 @@ public class MainPresenter {
     public MainPresenter(GoogleService googleService, DarkSkyService darkSkyService) {
         this.googleService = googleService;
         this.darkSkyService = darkSkyService;
-        compositeDisposable = new CompositeDisposable();
         weeklyForecast = new ArrayList<>();
     }
 
@@ -56,10 +56,12 @@ public class MainPresenter {
     public void locationRetrieved(String location) {
         weeklyForecast.clear();
 
-        compositeDisposable.add(googleService.getLocation(location)
+        googleService.getLocation(location)
                 .doOnNext(addressInformation -> view.showLocation(addressInformation.getFormattedAddress()))
                 .flatMap(addressInformation -> darkSkyService.getWeather(addressInformation.getGoogleGeometry().getGoogleLocation().getLatitude(),
                         addressInformation.getGoogleGeometry().getGoogleLocation().getLongitude()))
+                .repeat()
+                .takeUntil(weatherResponse -> weatherResponse != null)
                 .doOnNext(weatherResponse -> {
                     for(int i = 1; i <= 7; i++) {
                         DarkSkyApi.Days day = weatherResponse.getDailyWeather().getDaysList().get(i);
@@ -70,18 +72,19 @@ public class MainPresenter {
                     }
                 })
                 .subscribe(weatherResponse -> {
-                    view.showIcon(showIcon(weatherResponse.getDailyWeather().getDaysList().get(0).getIcon()));
-                    view.showDailySummary(weatherResponse.getDailyWeather().getDaysList().get(0).getSummary());
+                    DarkSkyApi.Days currentDay = weatherResponse.getDailyWeather().getDaysList().get(0);
+                    view.showIcon(showIcon(currentDay.getIcon()));
+                    view.showDailySummary(currentDay.getSummary());
                     view.showDailyTemp(
-                            String.valueOf(Math.ceil(weatherResponse.getDailyWeather().getDaysList().get(0).getHighTemp())) + (char) 0x00B0,
-                            String.valueOf(Math.ceil(weatherResponse.getDailyWeather().getDaysList().get(0).getLowTemp())) + (char) 0x00B0);
+                            String.valueOf(Math.ceil(currentDay.getHighTemp())) + (char) 0x00B0,
+                            String.valueOf(Math.ceil(currentDay.getLowTemp())) + (char) 0x00B0);
                     view.showCurrentTemperature(String.valueOf(Math.ceil(weatherResponse.getCurrentWeather().getCurrentTemperature())) + (char) 0x00B0);
                     view.hideFrameLayout();
                     view.hideProgressBar();
                 }, throwable -> {
                     throwable.printStackTrace();
                     view.areaNotFoundToast();
-                }));
+                });
     }
 
     private String showIcon(String icon) {
@@ -106,5 +109,10 @@ public class MainPresenter {
         } else {
             view.closeApp();
         }
+    }
+
+    public void locationChanged() {
+        view.showFrameLayout();
+        view.showProgressBar();
     }
 }

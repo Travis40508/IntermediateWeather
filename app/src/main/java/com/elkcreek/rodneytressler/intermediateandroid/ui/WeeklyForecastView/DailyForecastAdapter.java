@@ -1,4 +1,4 @@
-package com.elkcreek.rodneytressler.intermediateandroid.ui.WeeklyForecaseView;
+package com.elkcreek.rodneytressler.intermediateandroid.ui.WeeklyForecastView;
 
 import android.graphics.Color;
 import android.support.constraint.ConstraintLayout;

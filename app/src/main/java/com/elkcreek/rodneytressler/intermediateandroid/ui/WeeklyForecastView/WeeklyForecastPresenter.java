@@ -1,4 +1,4 @@
-package com.elkcreek.rodneytressler.intermediateandroid.ui.WeeklyForecaseView;
+package com.elkcreek.rodneytressler.intermediateandroid.ui.WeeklyForecastView;
 
 import com.elkcreek.rodneytressler.intermediateandroid.repository.apis.DarkSkyApi;
 

@@ -67,4 +67,10 @@ dependencies {
 
     //Google Play
     implementation 'com.google.android.gms:play-services-location:15.0.0'
+
+    //Okhttp Interceptor
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
+
+    //Smart Location
+    compile 'io.nlopez.smartlocation:library:3.3.3'
 }

@@ -7,13 +7,11 @@ import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,7 +19,7 @@ import android.widget.Toast;
 import com.elkcreek.rodneytressler.intermediateandroid.R;
 import com.elkcreek.rodneytressler.intermediateandroid.repository.apis.DarkSkyApi;
 import com.elkcreek.rodneytressler.intermediateandroid.ui.ChangeLocationView.ChangeLocationFragment;
-import com.elkcreek.rodneytressler.intermediateandroid.ui.WeeklyForecaseView.WeeklyForecastFragment;
+import com.elkcreek.rodneytressler.intermediateandroid.ui.WeeklyForecastView.WeeklyForecastFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -106,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements MainView, ChangeL
         };
 
         mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 500, 5, mLocationListener);
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 5, mLocationListener);
     }
 
     @Override
@@ -220,6 +218,8 @@ public class MainActivity extends AppCompatActivity implements MainView, ChangeL
 
     @Override
     public void locationChanged(String location) {
+        mLocationListener = null;
+        presenter.locationChanged();
         presenter.locationRetrieved(location);
     }
 

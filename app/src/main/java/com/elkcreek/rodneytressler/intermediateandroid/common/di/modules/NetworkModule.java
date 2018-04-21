@@ -9,11 +9,15 @@ import com.elkcreek.rodneytressler.intermediateandroid.repository.apiservice.Goo
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
+
+
 import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -36,23 +40,35 @@ public class NetworkModule {
     @Provides
     @Named("google retrofit")
     @Singleton
-    Retrofit providesGoogleRetrofit() {
+    Retrofit providesGoogleRetrofit(OkHttpClient okHttpClient) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(googleBaseUrl)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(okHttpClient)
                 .build();
         return retrofit;
     }
 
     @Provides
+    OkHttpClient providesOkHttpClient() {
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(logging)
+                .build();
+        return client;
+    }
+
+    @Provides
     @Named("darksky retrofit")
     @Singleton
-    Retrofit providesDarkSkyRetrofit() {
+    Retrofit providesDarkSkyRetrofit(OkHttpClient okHttpClient) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(darkSkyBaseUrl)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(okHttpClient)
                 .build();
         return retrofit;
     }
