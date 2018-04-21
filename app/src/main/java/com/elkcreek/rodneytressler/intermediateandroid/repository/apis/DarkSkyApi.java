@@ -154,11 +154,11 @@ public interface DarkSkyApi {
         }
 
         public String lowTempString() {
-            return String.valueOf(lowTemp);
+            return String.valueOf(Math.ceil(lowTemp));
         }
 
         public String highTempString() {
-            return String.valueOf(highTemp);
+            return String.valueOf(Math.ceil(highTemp));
         }
 
         public String precipChanceString() {

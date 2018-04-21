@@ -1,9 +1,15 @@
 package com.elkcreek.rodneytressler.intermediateandroid.ui.MainView;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -20,6 +26,9 @@ import com.elkcreek.rodneytressler.intermediateandroid.R;
 import com.elkcreek.rodneytressler.intermediateandroid.repository.apis.DarkSkyApi;
 import com.elkcreek.rodneytressler.intermediateandroid.ui.ChangeLocationView.ChangeLocationFragment;
 import com.elkcreek.rodneytressler.intermediateandroid.ui.WeeklyForecastView.WeeklyForecastFragment;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +37,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import dagger.android.AndroidInjection;
 
 public class MainActivity extends AppCompatActivity implements MainView, ChangeLocationFragment.Callback {
@@ -55,11 +65,18 @@ public class MainActivity extends AppCompatActivity implements MainView, ChangeL
     @BindView(R.id.progress_bar)
     protected ProgressBar progressBar;
 
+    @OnClick(R.id.button_current_location)
+    protected void onCurrentLocationClicked(View view) {
+        presenter.currentLocationClicked();
+    }
+
     private LocationListener mLocationListener;
     private LocationManager mLocationManager;
+    private FusedLocationProviderClient providerClient;
     private ChangeLocationFragment fragment;
     private WeeklyForecastFragment weeklyForecastFragment;
     public static final String WEEKLY_FORECAST_TAG = "weekly_forecast_tag";
+    private static final int PERMISSION_REQUEST_LOCATION = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,44 +84,85 @@ public class MainActivity extends AppCompatActivity implements MainView, ChangeL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        presenter.onCreate(this);
 
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            checkLocationPermissions();
+        } else {
+            presenter.onCreate(this);
+        }
 
 
     }
 
+    private void checkLocationPermissions() {
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestLocationPermission();
+        } else {
+            presenter.onCreate(this);
+        }
+    }
+
+    private void requestLocationPermission() {
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_LOCATION);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+
+        switch (requestCode) {
+            case PERMISSION_REQUEST_LOCATION : {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    presenter.onCreate(this);
+                } else {
+                    Toast.makeText(this, "Please enable locations to use this app!", Toast.LENGTH_SHORT).show();
+                    requestLocationPermission();
+                }
+                return;
+            }
+        }
+    }
 
 
     @Override
     public void getCurrentLocation() {
-        mLocationListener = new LocationListener() {
+//        mLocationListener = new LocationListener() {
+//            @Override
+//            public void onLocationChanged(Location location) {
+//                double lat = location.getLatitude();
+//                double lon = location.getLongitude();
+//
+//                String newLocation = lat + ", " + lon;
+//                presenter.locationRetrieved(newLocation);
+//            }
+//
+//            @Override
+//            public void onStatusChanged(String provider, int status, Bundle extras) {
+//
+//            }
+//
+//            @Override
+//            public void onProviderEnabled(String provider) {
+//
+//            }
+//
+//            @Override
+//            public void onProviderDisabled(String provider) {
+//
+//            }
+//        };
+//
+//        mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+//        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 500, 5, mLocationListener);
+        providerClient = LocationServices.getFusedLocationProviderClient(this);
+        providerClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
-            public void onLocationChanged(Location location) {
-                double lat = location.getLatitude();
-                double lon = location.getLongitude();
-
-                String newLocation = lat + ", " + lon;
+            public void onSuccess(Location location) {
+                String newLocation = location.getLatitude() + ", " + location.getLongitude();
                 presenter.locationRetrieved(newLocation);
             }
-
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-
-            }
-        };
-
-        mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 5, mLocationListener);
+        });
     }
 
     @Override

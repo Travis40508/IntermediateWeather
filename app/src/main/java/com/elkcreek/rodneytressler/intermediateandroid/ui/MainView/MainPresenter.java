@@ -48,8 +48,6 @@ public class MainPresenter {
         if (view != null) {
             view.getCurrentLocation();
             view.showToolbar();
-            view.showFrameLayout();
-            view.showProgressBar();
         }
     }
 
@@ -114,5 +112,11 @@ public class MainPresenter {
     public void locationChanged() {
         view.showFrameLayout();
         view.showProgressBar();
+    }
+
+    public void currentLocationClicked() {
+        view.showProgressBar();
+        view.showFrameLayout();
+        view.getCurrentLocation();
     }
 }

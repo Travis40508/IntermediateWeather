@@ -72,7 +72,6 @@
 
     <FrameLayout
         android:id="@+id/frame_layout"
-        android:visibility="gone"
         android:background="@android:color/white"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -90,10 +89,28 @@
 
     <ProgressBar
         android:id="@+id/progress_bar"
-        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/dark_sky"
+        android:src="@drawable/dark_sky"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="150dp"
+        android:layout_height="150dp" />
+
+    <Button
+        android:id="@+id/button_current_location"
+        android:layout_margin="10dp"
+        android:text="Current Location"
+        android:textColor="@color/colorPrimary"
+        android:background="@android:color/transparent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />

@@ -71,6 +71,4 @@ dependencies {
     //Okhttp Interceptor
     implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
 
-    //Smart Location
-    compile 'io.nlopez.smartlocation:library:3.3.3'
 }
