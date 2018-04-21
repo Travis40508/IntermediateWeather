@@ -221,7 +221,7 @@ public class MainActivity extends AppCompatActivity implements MainView, ChangeL
     public void showChangeLocationFragment() {
         fragment = ChangeLocationFragment.newInstance();
         fragment.attachParent(this);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_holder, fragment).commit();
+        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.enter, R.anim.pop_exit).replace(R.id.fragment_holder, fragment).commit();
     }
 
     @Override
@@ -240,17 +240,17 @@ public class MainActivity extends AppCompatActivity implements MainView, ChangeL
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(WEEKLY_FORECAST_TAG, (ArrayList<? extends Parcelable>) weeklyForecast);
         weeklyForecastFragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_holder, weeklyForecastFragment).commit();
+        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.enter, R.anim.pop_exit).replace(R.id.fragment_holder, weeklyForecastFragment).commit();
     }
 
     @Override
     public void removeChangeLocationFragment() {
-        getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.pop_enter, R.anim.pop_exit).remove(fragment).commit();
     }
 
     @Override
     public void removeWeeklyForecastFragment() {
-        getSupportFragmentManager().beginTransaction().remove(weeklyForecastFragment).commit();
+        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.pop_enter, R.anim.pop_exit).remove(weeklyForecastFragment).commit();
     }
 
     @Override
@@ -293,7 +293,7 @@ public class MainActivity extends AppCompatActivity implements MainView, ChangeL
 
     @Override
     public void detachFragment() {
-        getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.pop_enter, R.anim.pop_exit).remove(fragment).commit();
     }
 
     @Override
