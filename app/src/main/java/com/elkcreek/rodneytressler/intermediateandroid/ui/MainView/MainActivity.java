@@ -101,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements MainView, ChangeL
         } else {
             presenter.viewRestored();
             weeklyForecastFragment = (WeeklyForecastFragment) getSupportFragmentManager().findFragmentByTag(WEEKLY_FORECAST_TAG);
+            presenter.restoreWeeklyForecast(savedInstanceState);
             fragment = (ChangeLocationFragment) getSupportFragmentManager().findFragmentByTag(CHANGE_LOCATION_TAG);
             location.setText(savedInstanceState.getString(LOCATION_KEY));
             weatherIcon.setText(savedInstanceState.getString(EMOJI_KEY));
@@ -114,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements MainView, ChangeL
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        presenter.saveWeeklyForecast(outState);
         outState.putString(LOCATION_KEY, location.getText().toString());
         outState.putString(EMOJI_KEY, weatherIcon.getText().toString());
         outState.putString(CURRENT_TEMPERATURE, currentTemperature.getText().toString());

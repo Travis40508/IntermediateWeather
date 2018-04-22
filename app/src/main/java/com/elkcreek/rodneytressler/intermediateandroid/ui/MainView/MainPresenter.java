@@ -1,6 +1,8 @@
 package com.elkcreek.rodneytressler.intermediateandroid.ui.MainView;
 
 import android.location.LocationListener;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 
 import com.elkcreek.rodneytressler.intermediateandroid.repository.apis.DarkSkyApi;
@@ -130,5 +132,13 @@ public class MainPresenter {
         view.showToolbar();
         view.hideProgressBar();
         view.hideFrameLayout();
+    }
+
+    public void saveWeeklyForecast(Bundle outState) {
+        outState.putParcelableArrayList("TEST", (ArrayList<? extends Parcelable>) weeklyForecast);
+    }
+
+    public void restoreWeeklyForecast(Bundle savedInstanceState) {
+        weeklyForecast = savedInstanceState.getParcelableArrayList("TEST");
     }
 }
