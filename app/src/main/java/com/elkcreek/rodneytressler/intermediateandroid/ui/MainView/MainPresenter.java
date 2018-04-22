@@ -42,9 +42,7 @@ public class MainPresenter {
         weeklyForecast = new ArrayList<>();
     }
 
-    public void onCreate(MainView view) {
-        this.view = view;
-
+    public void onCreate() {
         if (view != null) {
             view.getCurrentLocation();
             view.showToolbar();
@@ -122,5 +120,15 @@ public class MainPresenter {
 
     public void locationIsNull() {
         view.toastEnableLocation();
+    }
+
+    public void attachParent(MainView view) {
+        this.view = view;
+    }
+
+    public void viewRestored() {
+        view.showToolbar();
+        view.hideProgressBar();
+        view.hideFrameLayout();
     }
 }

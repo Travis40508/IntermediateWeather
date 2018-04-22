@@ -8,6 +8,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Parcelable;
+import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -77,6 +78,12 @@ public class MainActivity extends AppCompatActivity implements MainView, ChangeL
     private ChangeLocationFragment fragment;
     private WeeklyForecastFragment weeklyForecastFragment;
     public static final String WEEKLY_FORECAST_TAG = "weekly_forecast_tag";
+    public static final String CHANGE_LOCATION_TAG = "change_location_tag";
+    public static final String LOCATION_KEY = "location_key";
+    public static final String EMOJI_KEY = "emoji_key";
+    public static final String CURRENT_TEMPERATURE = "current_temperature";
+    public static final String DAILY_TEMPERATURE = "daily_temperature";
+    public static final String WEATHER_SUMMARY = "weather_summary";
     private static final int PERMISSION_REQUEST_LOCATION = 0;
 
     @Override
@@ -86,20 +93,39 @@ public class MainActivity extends AppCompatActivity implements MainView, ChangeL
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        presenter.attachParent(this);
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermissions();
+        } else if(savedInstanceState == null) {
+            presenter.onCreate();
         } else {
-            presenter.onCreate(this);
+            presenter.viewRestored();
+            weeklyForecastFragment = (WeeklyForecastFragment) getSupportFragmentManager().findFragmentByTag(WEEKLY_FORECAST_TAG);
+            fragment = (ChangeLocationFragment) getSupportFragmentManager().findFragmentByTag(CHANGE_LOCATION_TAG);
+            location.setText(savedInstanceState.getString(LOCATION_KEY));
+            weatherIcon.setText(savedInstanceState.getString(EMOJI_KEY));
+            currentTemperature.setText(savedInstanceState.getString(CURRENT_TEMPERATURE));
+            dailyTemperature.setText(savedInstanceState.getString(DAILY_TEMPERATURE));
+            dailySummary.setText(savedInstanceState.getString(WEATHER_SUMMARY));
         }
+    }
 
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(LOCATION_KEY, location.getText().toString());
+        outState.putString(EMOJI_KEY, weatherIcon.getText().toString());
+        outState.putString(CURRENT_TEMPERATURE, currentTemperature.getText().toString());
+        outState.putString(DAILY_TEMPERATURE, dailyTemperature.getText().toString());
+        outState.putString(WEATHER_SUMMARY, dailySummary.getText().toString());
     }
 
     private void checkLocationPermissions() {
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestLocationPermission();
         } else {
-            presenter.onCreate(this);
+            presenter.onCreate();
         }
     }
 
@@ -115,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements MainView, ChangeL
             case PERMISSION_REQUEST_LOCATION : {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    presenter.onCreate(this);
+                    presenter.onCreate();
                 } else {
                     Toast.makeText(this, "Please enable locations to use this app!", Toast.LENGTH_SHORT).show();
                     requestLocationPermission();
@@ -221,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements MainView, ChangeL
     public void showChangeLocationFragment() {
         fragment = ChangeLocationFragment.newInstance();
         fragment.attachParent(this);
-        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.enter, R.anim.pop_exit).replace(R.id.fragment_holder, fragment).commit();
+        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.enter, R.anim.pop_exit).replace(R.id.fragment_holder, fragment, CHANGE_LOCATION_TAG).commit();
     }
 
     @Override
@@ -240,7 +266,7 @@ public class MainActivity extends AppCompatActivity implements MainView, ChangeL
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(WEEKLY_FORECAST_TAG, (ArrayList<? extends Parcelable>) weeklyForecast);
         weeklyForecastFragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.enter, R.anim.pop_exit).replace(R.id.fragment_holder, weeklyForecastFragment).commit();
+        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.enter, R.anim.pop_exit).replace(R.id.fragment_holder, weeklyForecastFragment, WEEKLY_FORECAST_TAG).commit();
     }
 
     @Override

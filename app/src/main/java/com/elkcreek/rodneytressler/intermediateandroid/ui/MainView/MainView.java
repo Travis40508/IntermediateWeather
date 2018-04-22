@@ -45,4 +45,5 @@ public interface MainView {
     void closeApp();
 
     void toastEnableLocation();
+
 }
