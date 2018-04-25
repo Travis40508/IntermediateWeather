@@ -36,6 +36,7 @@ public class MainPresenter {
     private final DarkSkyService darkSkyService;
     private MainView view;
     private List<DarkSkyApi.Days> weeklyForecast;
+    public static final String WEATHER_FORECAST = "weather_forecast";
 
     @Inject
     public MainPresenter(GoogleService googleService, DarkSkyService darkSkyService) {
@@ -135,10 +136,10 @@ public class MainPresenter {
     }
 
     public void saveWeeklyForecast(Bundle outState) {
-        outState.putParcelableArrayList("TEST", (ArrayList<? extends Parcelable>) weeklyForecast);
+        outState.putParcelableArrayList(WEATHER_FORECAST, (ArrayList<? extends Parcelable>) weeklyForecast);
     }
 
     public void restoreWeeklyForecast(Bundle savedInstanceState) {
-        weeklyForecast = savedInstanceState.getParcelableArrayList("TEST");
+        weeklyForecast = savedInstanceState.getParcelableArrayList(WEATHER_FORECAST);
     }
 }
